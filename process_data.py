@@ -1,20 +1,10 @@
-import argparse
-
+# Imports
 import pandas as pd
 from datetime import date, datetime
 from sqlalchemy import create_engine
+import sys
 
-# python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db
-
-# Configure ArgumentParser 
-parser = argparse.ArgumentParser(description = 'Train an AI model.')
-
-
-parser.add_argument('disaster_messages', action = 'store', help = 'A csv file with disaster menssages.')
-parser.add_argument('disaster_categories', action = 'store', help = 'A csv file with disaster menssages.')
-
-arguments = parser.parse_args()
-
+# DEFs
 def load_data(messages, categories):
 
     # load messages dataset
@@ -98,22 +88,36 @@ def save_sql(df):
 
     return filename
 
+# App
+def main():
+	if len(sys.argv) == 3:
 
-def man(messages = arguments.disaster_messages, categories = arguments.disaster_categories):
-	df = load_data(messages,  categories)
-	df = etl_pipeline(df)
+		messages, categories = sys.argv[1:]
 
-	# Drop outliers:
-	outliers_columns = find_outliers(df)
+		print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'.format(messages, categories))
 
-	if outliers_columns:
-		df = drop_outliers(df, outliers_columns)
+		df = load_data(messages, categories)
+		
 
-	filename = save_sql(df)
+		print('Cleaning data...')
+		df = etl_pipeline(df)
 
-	print("ETL_output = {}".format(filename))
+		# Drop outliers:
+		outliers_columns = find_outliers(df)
 
-man()
+		if outliers_columns:
+			df = drop_outliers(df, outliers_columns)
 
+		filename = save_sql(df)
+		print('Saving data...\n    DATABASE: {}'.format(filename))
 
+	else:
+		print('\nPlease provide the filepaths of the messages and categories '\
+              'datasets as the first and second argument respectively, '\
+              'The  cleaned data will save in a database file.\
+              \n\nExample: python process_data.py '\
+              'disaster_messages.csv disaster_categories.csv \n')
 
+# RUN
+if __name__ == '__main__':
+    main()
