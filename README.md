@@ -21,6 +21,8 @@ The project include a web app where an emergency worker can input a nem message 
 
 ## File description <a name="file"></a>
 
+ETL Pipeline Preparation.ipynb - A jupyter file with an ETL Pipeline Sketch
+
 process_data.py - A data cleaning pipeline.  Loads the messages and categories datasets. Merges the two datasets. Cleans the data and Stores it in a SQLite database.
 
 train_classifier.py - A machine learning pipeline. Loads data from the SQLite database. Splits the dataset into training and test sets. Builds a text processing and machine learning pipeline. Trains and tunes a model using GridSearchCV. Outputs results on the test set. Exports the final model as a pickle file.
