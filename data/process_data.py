@@ -83,21 +83,23 @@ def etl_pipeline(df):
     
 	return df
 
-def save_sql(df):
-    now = datetime.now()
-    dt_string = now.strftime("%d_%m_%Y_%H_%M_%S")
-    filename = f'disasterResponse_{dt_string}.db'
+def save_sql(df, database_filepath):
+    """
+    INPUT:
+        A path to file DB.
 
-    engine = create_engine(f'sqlite:///{filename}')
+    """
+
+    engine = create_engine(f'sqlite:///{database_filepath}')
     df.to_sql('disasterResponse', engine, index=False)
 
     return filename
 
 # App
 def main():
-	if len(sys.argv) == 3:
+	if len(sys.argv) == 4:
 
-		messages, categories = sys.argv[1:]
+		messages, categories, database_filepath = sys.argv[1:]
 
 		print('Loading data...\n    MESSAGES: {}\n    CATEGORIES: {}'.format(messages, categories))
 
@@ -113,7 +115,7 @@ def main():
 
 		print(df.shape)
 
-		filename = save_sql(df)
+		filename = save_sql(df, database_filepath)
 		print('Saving data...\n    DATABASE: {}'.format(filename))
 
 	else:
