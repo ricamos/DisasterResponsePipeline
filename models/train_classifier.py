@@ -85,7 +85,7 @@ def build_model():
     
     # Build a machine learning pipeline
     
-    lm  = RandomForestClassifier()
+    lm  = RandomForestClassifier(n_estimators = 10)
     
     pipeline = Pipeline(
     [("vect", CountVectorizer(tokenizer=tokenize)),
@@ -99,16 +99,16 @@ def build_model():
 #     }
     
     parameters = {
-        'vect__ngram_range': ((1, 1), (1, 2)),
-        'vect__max_df': (0.5, 0.75, 1.0),
-        'vect__min_df': (0.1, 0.05),
-        'vect__max_features': (None, 100, 500, 1000, 5000),
+        # 'vect__ngram_range': ((1, 1), (1, 2)),
+        # 'vect__max_df': (0.5, 0.75, 1.0),
+        # 'vect__min_df': (0.1, 0.05),
+        # 'vect__max_features': (None, 100, 500, 1000, 5000),
         
         
-        'clf__estimator__n_estimators': [50, 100, 200],
-        'clf__estimator__max_depth': [4, 8, 16],
-        'clf__estimator__min_samples_leaf': [2, 4, 8],
-        'clf__estimator__min_samples_split': [2, 4, 8],
+        # 'clf__estimator__n_estimators': [50, 100, 200],
+        # 'clf__estimator__max_depth': [4, 8, 16],
+         'clf__estimator__min_samples_leaf': [2, 4, 8],
+         'clf__estimator__min_samples_split': [2, 4, 8],
     
     }
     
@@ -118,27 +118,22 @@ def build_model():
     
     return cv
 
-def save_model(model):
+def save_model(model, model_filepath):
     """
-    Save your model as a pikle file in current local directory.
+    Save your model as a pikle file.
     
-    The output file looks like "model_10_09_2019_02_21_04.sav". 
-    
-    Where the numbers indicate the date and the time that file was create - %d_%m_%Y_%H_%M_%S".
     """
-    
-    now = datetime.now()
-    dt_string = now.strftime("%d_%m_%Y_%H_%M_%S")
+ 
 
     # save the model to disk
-    filename = f'model_{dt_string}.sav'
+    filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
 
 
 def main():
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 3:
         
-        database_filepath = sys.argv[1:][0]
+        database_filepath, model_filepath = sys.argv[1:]
         
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, df = load_data(database_filepath)
