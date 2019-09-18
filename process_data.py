@@ -14,37 +14,42 @@ def load_data(messages, categories):
     # return merge datasets
     return  messages.merge(categories, on=["id"])
 
+def only_ony_class(df):
+    """
+    Find and drop columns with number of labels other than 2.
+    """
+    col_one_class = []
+    for col in df.columns[4:]:
+        if df[col].unique().shape[0] != 2:
+            col_one_class.append(col)
+            df = df.drop([col], axis=1)
+    print(col_one_class)
+    return df
 
-def find_outliers(df):
-    outliers_columns = {}
-    for x in df.columns[4:]:
-        row = df.loc[(df[x] != 0) & (df[x] != 1) ].shape[0]
-        if row:
-            outliers_columns.update({x : row})
+def drop_outliers(df):
+    """
+    Input:
+        The Data Frame and a dictionary with column names that contain different values.
+        
+    Output:
+        A new dataframe without rows with diffetents values
+    """
     
-    if outliers_columns:
-        #print(outliers_columns)
-        return outliers_columns
-    else:
-        print("No outliers")
-
-
-def drop_outliers(df, outliers_columns):
-
     outliers_index = []
-    for x in outliers_columns:
-        index = df.loc[(df[x] != 0) & (df[x] != 1) ].index.values
+    for col in df.columns[4:]:
+        index = df.loc[(df[col] != 0) & (df[col] != 1)].index.values
         for x in index:
-            outliers_index.append(x)
+             outliers_index.append(x)
+
+    for row in df.index:
+        if df[df.columns[4:]].loc[row].unique().shape[0]<2:
+            outliers_index.append(row)
 
     #print(set(outliers_index))
     
     for x in set(outliers_index):
-        try:
             df = df.drop([x])
-        except:
-            pass
-    
+            
     return df
 
 def etl_pipeline(df):
@@ -102,11 +107,11 @@ def main():
 		print('Cleaning data...')
 		df = etl_pipeline(df)
 
-		# Drop outliers:
-		outliers_columns = find_outliers(df)
+		df = only_ony_class(df) # Deve ser executada antes de drop_outliers
 
-		if outliers_columns:
-			df = drop_outliers(df, outliers_columns)
+		df = drop_outliers(df)
+
+		print(df.shape)
 
 		filename = save_sql(df)
 		print('Saving data...\n    DATABASE: {}'.format(filename))
