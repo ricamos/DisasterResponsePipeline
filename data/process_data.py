@@ -93,8 +93,6 @@ def save_sql(df, database_filepath):
     engine = create_engine(f'sqlite:///{database_filepath}')
     df.to_sql('disasterResponse', engine, index=False)
 
-    return filename
-
 # App
 def main():
 	if len(sys.argv) == 4:
@@ -115,8 +113,8 @@ def main():
 
 		print(df.shape)
 
-		filename = save_sql(df, database_filepath)
-		print('Saving data...\n    DATABASE: {}'.format(filename))
+		save_sql(df, database_filepath)
+		print('Saving data...\n    DATABASE: {}'.format(database_filepath))
 
 	else:
 		print('\nPlease provide the filepaths of the messages and categories '\
