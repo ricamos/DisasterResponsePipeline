@@ -32,7 +32,6 @@ df = pd.read_sql_table('disasterResponse', engine)
 # load model
 model = joblib.load("../models/classifier.pkl")
 
-
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
@@ -42,6 +41,10 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    
+    # Plot 2
+    frequency = df[df.columns[4:]].sum().values
+    categories = df[df.columns[4:]].sum().index
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -61,6 +64,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=categories,
+                    y=frequency
+                )
+            ],
+
+            'layout': {
+                'title': "The frequency of categories",
+                'yaxis': {
+                    'title': "Frequency"
+                },
+                'xaxis': {
+                    'title': "categories"
                 }
             }
         }
