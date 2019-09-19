@@ -29,6 +29,13 @@ train_classifier.py - A machine learning pipeline. Loads data from the SQLite da
 
 ## How to interact with your project <a name="interact"></a>
 
+If someone in the future comes with a revised or new dataset of messages, they should be able to easily create a new model just by running the scripts. These Python scripts are able to run with additional arguments specifying the files used for the data and model.
+
+python process_data.py disaster_messages.csv disaster_categories.csv 
+
+python train_classifier.py DisasterResponse.db classifier.pkl
+
+
 ## Licensing <a name="licensing"></a>
 [License file](https://github.com/ricamos/DisasterResponsePipeline/blob/master/LICENSE)
 
