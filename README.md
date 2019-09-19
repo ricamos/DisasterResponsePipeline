@@ -1,4 +1,4 @@
-# Write A Data Science Blog Post 
+# Disaster Response Pipeline Project
 
 ## Table of Contents:
 
@@ -21,26 +21,37 @@ The project include a web app where an emergency worker can input a nem message 
 
 ## File description <a name="file"></a>
 
-ETL Pipeline Preparation.ipynb - A jupyter file with an ETL Pipeline Sketch
-
 process_data.py - A data cleaning pipeline.  Loads the messages and categories datasets. Merges the two datasets. Cleans the data and Stores it in a SQLite database.
 
 train_classifier.py - A machine learning pipeline. Loads data from the SQLite database. Splits the dataset into training and test sets. Builds a text processing and machine learning pipeline. Trains and tunes a model using GridSearchCV. Outputs results on the test set. Exports the final model as a pickle file.
 
+process_data.py -  ETL pipeline, read the dataset, clean the data, and then store it in a SQLite database. 
+
+train_classifier.py -  ML pipeline, split the data into a training set and a test set. Create a machine learning pipeline that uses NLTK, as well as scikit-learn's Pipeline and GridSearchCV to output a final model that uses the message column to predict classifications.
+
+run.py - Run the Web App.
+
 ## How to interact with your project <a name="interact"></a>
 
-If someone in the future comes with a revised or new dataset of messages, they should be able to easily create a new model just by running the scripts. These Python scripts are able to run with additional arguments specifying the files used for the data and model.
+### Instructions:
+1. Run the following commands in the project's root directory to set up your database and model.
 
-python process_data.py disaster_messages.csv disaster_categories.csv 
+    - To run ETL pipeline that cleans data and stores in database
+        `python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
+    - To run ML pipeline that trains classifier and saves
+        `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
 
-python train_classifier.py DisasterResponse.db classifier.pkl
+2. Run the following command in the app's directory to run your web app.
+    `python run.py`
+
+3. Go to http://0.0.0.0:3001/
 
 
 ## Licensing <a name="licensing"></a>
 [License file](https://github.com/ricamos/DisasterResponsePipeline/blob/master/LICENSE)
 
 ## Authors <a name="author"></a>
-Ricardo Coelho
+Ricardo Coelho and Udacity
 
 ## Acknowledgements <a name="ack"></a>
 The project will also be graded based on the following:
