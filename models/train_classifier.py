@@ -56,6 +56,7 @@ def load_data(db):
     
     return X, Y, df
 
+
 def tokenize(text):
      # Normalize 
     text = text.lower().strip() # Tudo minusculo 
@@ -118,6 +119,24 @@ def build_model():
     
     return cv
 
+def evaluate_model(model, X_test, Y_test, category_names):
+    """
+    INPUT:
+        y_teste = Target test
+        y_pred = Prediction target
+        target_names = Columns names of targets.
+    
+    OUTPUT:
+        Print: f1 score, precision and recall 
+    """ 
+
+    # predict on test data
+    y_pred = model.predict(X_test)
+
+    for i in range(len(category_names)):
+        print(category_names[i])
+        print(classification_report(Y_test[:, i], y_pred[:, i]))
+
 def save_model(model, model_filepath):
     """
     Save your model as a pikle file.
@@ -128,7 +147,6 @@ def save_model(model, model_filepath):
     # save the model to disk
     filename = model_filepath
     pickle.dump(model, open(filename, 'wb'))
-
 
 def main():
     if len(sys.argv) == 3:
@@ -146,8 +164,8 @@ def main():
         print('Training model...')
         model.fit(X_train, Y_train)
         
-        # print('Evaluating model...')
-        # evaluate_model(model, X_test, Y_test, category_names)
+        print('Evaluating model...')
+        evaluate_model(model, X_test, Y_test, df.columns[4:])
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
